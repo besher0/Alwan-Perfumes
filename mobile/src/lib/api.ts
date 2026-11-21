@@ -1,6 +1,6 @@
 import { Customer, CustomerAnalytics, DashboardData, NewPurchaseDto, Note, Purchase } from './types';
 
-export const API_BASE=(process.env.EXPO_PUBLIC_API_URL || 'http://localhost:3001/api').replace(/\/$/,'');
+export const API_BASE=(process.env.EXPO_PUBLIC_API_URL || 'https://alwan-perfumes-api.onrender.com/api').replace(/\/$/,'');
 export class ApiError extends Error { constructor(public status:number,message:string){super(message);this.name='ApiError';} }
 
 async function request<T>(path:string, token:string|undefined, method='GET', body?:unknown):Promise<T>{
