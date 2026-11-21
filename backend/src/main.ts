@@ -13,7 +13,13 @@ async function bootstrap() {
   app.setGlobalPrefix('api');
   app.useGlobalPipes(new ValidationPipe({whitelist:true,forbidNonWhitelisted:true,transform:true}));
   const allowed=(process.env.ALLOWED_ORIGINS||'').split(',').map(x=>x.trim()).filter(Boolean);
-  app.enableCors({origin:(origin,callback)=>callback(null,!origin||allowed.includes(origin)),methods:'GET,POST,PATCH,OPTIONS',allowedHeaders:'Content-Type,Authorization'});
+  app.enableCors({
+    origin: (origin: string | undefined, callback: (error: Error | null, allow?: boolean) => void) => {
+      callback(null, !origin || allowed.includes(origin));
+    },
+    methods: 'GET,POST,PATCH,OPTIONS',
+    allowedHeaders: 'Content-Type,Authorization',
+  });
   app.enableShutdownHooks();
   const port=Number(process.env.PORT||3001);
   await app.listen(port,'0.0.0.0');
