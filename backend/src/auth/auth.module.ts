@@ -8,6 +8,8 @@ import { OwnerGuard } from './auth.guard';
   imports: [JwtModule.register({ secret: process.env.JWT_SECRET, signOptions: { expiresIn: 60 * 60 * 12 } })],
   controllers: [AuthController],
   providers: [AuthService, OwnerGuard],
-  exports: [OwnerGuard],
+  // Re-export JwtModule so feature modules using @UseGuards(OwnerGuard)
+  // can resolve JwtService in their own dependency injection context.
+  exports: [OwnerGuard, JwtModule],
 })
 export class AuthModule {}
