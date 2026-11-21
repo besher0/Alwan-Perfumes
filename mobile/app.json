@@ -1,0 +1,15 @@
+{
+  "expo": {
+    "name": "علوان للعطور",
+    "slug": "alwan-perfumes",
+    "scheme": "alwan-perfumes",
+    "version": "0.1.0",
+    "orientation": "default",
+    "userInterfaceStyle": "light",
+    "backgroundColor": "#F7F2EE",
+    "ios": { "supportsTablet": true, "bundleIdentifier": "com.alwanperfumes.tablet" },
+    "android": { "package": "com.alwanperfumes.tablet", "edgeToEdgeEnabled": true },
+    "plugins": ["expo-font", "expo-secure-store"],
+    "extra": { "appNameAr": "علوان للعطور" }
+  }
+}

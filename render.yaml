@@ -1,0 +1,21 @@
+# Render Blueprint: deploys only the NestJS API, not the Expo native app.
+services:
+  - type: web
+    name: alwan-perfumes-api
+    runtime: node
+    plan: free
+    rootDir: backend
+    buildCommand: npm install --include=dev && npm run prisma:generate && npm run build
+    # Free plans do not support separate pre-deploy commands. For a single
+    # instance, run idempotent Prisma migrations before starting the API.
+    startCommand: npm run db:deploy && npm run start:prod
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_VERSION
+        value: 22.23.2
+      - key: DATABASE_URL
+        sync: false
+      - key: JWT_SECRET
+        generateValue: true
+      - key: SEED_DEMO
+        value: "false"
