@@ -82,7 +82,7 @@ export function NoteGrid({notes,selectedIds,onToggle,compact=false}:{
   const [measuredWidth,setMeasuredWidth]=useState(0);
   const available=measuredWidth||Math.max(220,screenWidth-(screenWidth>=820?326:80));
   const gap=available<440?7:compact?9:10;
-  const minimum=compact?89:100;
+  const minimum=compact?89:94; // 3 balanced notes on ~360px phones, 2 on narrow devices
   const columns=Math.max(2,Math.min(compact?6:5,Math.floor((available+gap)/(minimum+gap))));
   const tileWidth=Math.max(0,Math.floor((available-gap*(columns-1))/columns));
   return <View
