@@ -4,7 +4,7 @@ import { api } from '../lib/api';
 import { Customer,CustomerAnalytics,NoteStat } from '../lib/types';
 import { FALLBACK_NOTES,NOTE_IMAGES,arDate,noteLabel } from '../lib/notes';
 import { C } from '../theme/colors';
-import { AText,Button,Card,Empty,ErrorText,NoteTag,NoteTile,ScreenHeading,SectionHeading,Stars } from '../components/UI';
+import { AText,Button,Card,Empty,ErrorText,NoteTag,NoteGrid,ScreenHeading,SectionHeading,Stars } from '../components/UI';
 
 function TasteBars({rows}:{rows:NoteStat[]}){
   return <View style={{gap:15}}>
@@ -27,8 +27,6 @@ export function ProfileScreen({token,id,onInsights,onShare,onBack,onNewPurchase}
     .then(([c,a])=>{if(active){setCustomer(c);setStats(a);setEditNotes(c.favoriteNoteIds)}})
     .catch(e=>{if(active)setError(e instanceof Error?e.message:'تعذر تحميل الملف')});return()=>{active=false};},[token,id]);
   const saveFavorites=async()=>{setSaving(true);setError('');try{const updated=await api.updateFavorites(token,id,editNotes);setCustomer(updated);setStats(await api.analytics(token,id));setEditing(false)}catch(e){setError(e instanceof Error?e.message:'تعذر الحفظ')}finally{setSaving(false)}};
-  const available=width-(width>=820?282:38);const col=available>=650?5:available>=430?3:2;
-  const tileWidth=Math.max(100,Math.floor((available-42-10*(col-1))/col));
   return <View style={{gap:16}}>
     <View style={{flexDirection:'row-reverse',alignItems:'center',gap:12,flexWrap:'wrap'}}>
       <View style={{flex:1,minWidth:240}}><ScreenHeading eyebrow="CLIENT / PROFILE" title="ملف العميل" description="سجل المشتريات وتفضيلات الذوق العطري لهذا الزبون." icon="♙"/></View>
@@ -55,7 +53,7 @@ export function ProfileScreen({token,id,onInsights,onShare,onBack,onNewPurchase}
       </View>
       {editing?<Card style={{gap:13}}>
         <SectionHeading title="تعديل النوتات المفضلة" description="اختيارات يحددها العميل بنفسه، وهي منفصلة عن نوتات مشترياته" icon="♡"/>
-        <View style={{flexDirection:'row-reverse',flexWrap:'wrap',gap:9}}>{FALLBACK_NOTES.map(n=><NoteTile key={n.id} id={n.id} selected={editNotes.includes(n.id)} width={tileWidth} compact onPress={()=>setEditNotes(prev=>prev.includes(n.id)?prev.filter(v=>v!==n.id):[...prev,n.id])}/>)}</View>
+        <NoteGrid notes={FALLBACK_NOTES} selectedIds={editNotes} compact onToggle={noteId=>setEditNotes(prev=>prev.includes(noteId)?prev.filter(v=>v!==noteId):[...prev,noteId])}/>
         <View style={{flexDirection:'row-reverse',gap:8}}><Button title="حفظ التفضيلات" loading={saving} onPress={saveFavorites}/><Button title="إلغاء" variant="outline" onPress={()=>setEditing(false)}/></View>
       </Card>:null}
       <View style={{flexDirection:wide?'row-reverse':'column',gap:15,alignItems:'stretch'}}>
