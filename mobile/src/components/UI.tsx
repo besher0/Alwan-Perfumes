@@ -139,9 +139,13 @@ export function NoteTile({id,selected=false,onPress,width=112,disabled=false,com
 }
 
 export function NoteTag({id}:{id:string}){
-  return <View style={{flexDirection:'row-reverse',alignItems:'center',gap:6,borderColor:'#EADFD7',borderWidth:1,backgroundColor:'#FCF4ED',borderRadius:22,paddingVertical:4,paddingHorizontal:9}}>
-    <Image source={NOTE_IMAGES[id]||NOTE_IMAGES.rose} resizeMode="contain" style={{width:25,height:25}}/>
-    <AText weight="bold" size={10} color="#795B46">{noteLabel(id)}</AText>
+  return <View style={{
+    flexDirection:'row-reverse',alignItems:'center',gap:7,
+    borderColor:'#E6D8CE',borderWidth:1,backgroundColor:'#FFFAF7',
+    borderRadius:10,paddingVertical:3,paddingHorizontal:8,minHeight:37,
+  }}>
+    <Image source={NOTE_IMAGES[id]||NOTE_IMAGES.rose} resizeMode="contain" style={{width:31,height:30}} accessible={false}/>
+    <AText weight="bold" size={10} color="#795B46" style={{lineHeight:17}}>{noteLabel(id)}</AText>
   </View>;
 }
 
