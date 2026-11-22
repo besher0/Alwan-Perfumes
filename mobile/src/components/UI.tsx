@@ -3,7 +3,7 @@ import { ActivityIndicator, Image, Pressable, StyleProp, Text, TextInput, TextSt
 import { C, FONT } from '../theme/colors';
 import { NOTE_IMAGES, noteLabel } from '../lib/notes';
 
-export function AText({children,weight='regular',size=14,color=C.ink,style,numberOfLines}: {
+export function AText({ children, weight='regular', size=14, color=C.ink, style, numberOfLines }: {
   children?:React.ReactNode;weight?:'regular'|'bold'|'extra';size?:number;color?:string;style?:StyleProp<TextStyle>;numberOfLines?:number;
 }) {
   return <Text numberOfLines={numberOfLines} style={[{fontFamily:FONT[weight],fontSize:size,color,writingDirection:'rtl',textAlign:'right',lineHeight:size*1.85},style]}>{children}</Text>;
@@ -32,47 +32,57 @@ export function Field({label,value,onChangeText,placeholder,keyboardType='defaul
   </View>;
 }
 
-export function SectionHeading({title,description}:{title:string;description?:string}) {
- return <View style={{gap:2,marginBottom:14}}><AText weight="bold" size={15}>{title}</AText>{description?<AText size={10} color={C.muted}>{description}</AText>:null}</View>;
+export function SectionHeading({title,description,icon}:{title:string;description?:string;icon?:string}) {
+  return <View style={{gap:3,marginBottom:15}}>
+    <View style={{flexDirection:'row-reverse',alignItems:'center',gap:8}}>
+      {icon?<AText size={18} color={C.gold}>{icon}</AText>:null}
+      <AText weight="bold" size={15}>{title}</AText>
+    </View>
+    {description?<AText size={10} color={C.muted}>{description}</AText>:null}
+  </View>;
 }
 
-export function ScreenHeading({eyebrow,title,description}:{eyebrow:string;title:string;description:string}) {
- return <View style={{marginBottom:20,marginTop:3,gap:3}}>
-   <AText weight="bold" size={10} color={C.gold} style={{letterSpacing:1}}>{eyebrow}</AText>
-   <AText weight="extra" size={27}>{title}</AText>
-   <AText color={C.muted} size={11}>{description}</AText>
- </View>;
+export function ScreenHeading({eyebrow,title,description,icon='✧'}:{eyebrow:string;title:string;description:string;icon?:string}) {
+  return <View style={{flexDirection:'row-reverse',alignItems:'center',gap:13,marginBottom:4,marginTop:5}}>
+    <View style={{width:47,height:47,borderRadius:14,backgroundColor:'#F1E8DF',alignItems:'center',justifyContent:'center'}}>
+      <AText color={C.gold} size={22} style={{textAlign:'center'}}>{icon}</AText>
+    </View>
+    <View style={{flex:1,gap:2}}>
+      <AText weight="bold" size={10} color={C.gold} style={{letterSpacing:1.3,textAlign:'right'}}>{eyebrow}</AText>
+      <AText weight="extra" size={25}>{title}</AText>
+      <AText color={C.muted} size={11}>{description}</AText>
+    </View>
+  </View>;
 }
 
 export function Stars({rating,onChange,size=24}:{rating:number;onChange?:(v:number)=>void;size?:number}) {
- return <View style={{flexDirection:'row-reverse',justifyContent:'flex-end',alignItems:'center',gap:3}}>
- {Array.from({length:5},(_,i)=>i+1).map(n=><Pressable key={n} disabled={!onChange} onPress={()=>onChange?.(n)} accessibilityRole="button" accessibilityLabel={`تقييم ${n} نجوم`} hitSlop={6}>
- <Text style={{fontSize:size,color:n<=rating?C.gold:'#D7CAC0'}}>★</Text>
- </Pressable>)}
- </View>;
+  return <View style={{flexDirection:'row-reverse',justifyContent:'flex-end',alignItems:'center',gap:3}}>
+    {Array.from({length:5},(_,i)=>i+1).map(n=><Pressable key={n} disabled={!onChange} onPress={()=>onChange?.(n)} accessibilityRole="button" accessibilityLabel={`تقييم ${n} نجوم`} hitSlop={6}>
+      <Text style={{fontSize:size,color:n<=rating?C.gold:'#D7CAC0'}}>★</Text>
+    </Pressable>)}
+  </View>;
 }
 
-export function NoteTile({id,selected=false,onPress,width=112,disabled=false}:{id:string;selected?:boolean;onPress?:()=>void;width?:number;disabled?:boolean}){
- return <Pressable disabled={disabled||!onPress} onPress={onPress} accessibilityRole="checkbox" accessibilityState={{checked:selected}}
-   style={({pressed})=>({width,backgroundColor:selected?C.roseLight:'#F9F5F1',borderColor:selected?C.rose:C.line,borderWidth:selected?1.5:1,borderRadius:15,padding:7,alignItems:'center',opacity:pressed ? 0.8 : 1,position:'relative'})}>
-   <Image source={NOTE_IMAGES[id]||NOTE_IMAGES.rose} style={{width:'100%',height:76,borderRadius:10}} resizeMode="cover" />
-   <AText weight="bold" size={11} style={{textAlign:'center',marginTop:5}}>{noteLabel(id)}</AText>
-   {selected?<View style={{position:'absolute',top:5,right:5,width:22,height:22,borderRadius:11,backgroundColor:C.rose,alignItems:'center',justifyContent:'center',borderColor:C.white,borderWidth:1}}><Text style={{color:C.white,fontSize:13,fontWeight:'bold'}}>✓</Text></View>:null}
- </Pressable>;
+export function NoteTile({id,selected=false,onPress,width=112,disabled=false,compact=false}:{id:string;selected?:boolean;onPress?:()=>void;width?:number;disabled?:boolean;compact?:boolean}){
+  return <Pressable disabled={disabled||!onPress} onPress={onPress} accessibilityRole="checkbox" accessibilityState={{checked:selected}}
+    style={({pressed})=>({width,minHeight:compact?108:125,backgroundColor:selected?'#FBEEE9':'#FAF4F0',borderColor:selected?C.rose:'#E6DAD2',borderWidth:selected?1.6:1,borderRadius:14,padding:7,alignItems:'center',justifyContent:'flex-end',opacity:pressed?0.84:1,position:'relative'})}>
+    <Image source={NOTE_IMAGES[id]||NOTE_IMAGES.rose} style={{width:'100%',height:compact?61:77,borderRadius:9}} resizeMode="contain"/>
+    <AText weight="bold" size={11} style={{textAlign:'center',marginTop:5}}>{noteLabel(id)}</AText>
+    {selected?<View style={{position:'absolute',top:7,right:7,width:21,height:21,borderRadius:11,backgroundColor:C.rose,alignItems:'center',justifyContent:'center',borderColor:C.white,borderWidth:1}}><Text style={{color:C.white,fontSize:13,fontWeight:'bold'}}>✓</Text></View>:null}
+  </Pressable>;
 }
 
 export function NoteTag({id}:{id:string}){
- return <View style={{flexDirection:'row-reverse',alignItems:'center',gap:6,borderColor:C.line,borderWidth:1,backgroundColor:C.white,borderRadius:20,padding:5,paddingHorizontal:9}}>
- <Image source={NOTE_IMAGES[id]||NOTE_IMAGES.rose} style={{width:25,height:25,borderRadius:13}} />
- <AText weight="bold" size={10}>{noteLabel(id)}</AText>
- </View>;
+  return <View style={{flexDirection:'row-reverse',alignItems:'center',gap:6,borderColor:'#EADFD7',borderWidth:1,backgroundColor:'#FCF4ED',borderRadius:22,paddingVertical:4,paddingHorizontal:9}}>
+    <Image source={NOTE_IMAGES[id]||NOTE_IMAGES.rose} resizeMode="contain" style={{width:25,height:25}}/>
+    <AText weight="bold" size={10} color="#795B46">{noteLabel(id)}</AText>
+  </View>;
 }
 
 export function Empty({text}:{text:string}){
- return <Card style={{paddingVertical:42,alignItems:'center'}}><AText color={C.muted} size={13} style={{textAlign:'center'}}>{text}</AText></Card>;
+  return <View style={{paddingVertical:35,alignItems:'center',justifyContent:'center'}}><AText color={C.muted} size={12} style={{textAlign:'center'}}>{text}</AText></View>;
 }
-
 export function ErrorText({message}:{message?:string|null}){
- if(!message)return null;
- return <View style={{backgroundColor:'#FFF0EF',padding:11,borderRadius:10,borderWidth:1,borderColor:'#EDCFCC'}}><AText size={11} color={C.error}>{message}</AText></View>;
+  if(!message)return null;
+  return <View style={{backgroundColor:'#FFF0EF',padding:11,borderRadius:10,borderWidth:1,borderColor:'#EDCFCC'}}><AText size={11} color={C.error}>{message}</AText></View>;
 }

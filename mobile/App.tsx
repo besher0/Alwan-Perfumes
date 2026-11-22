@@ -58,12 +58,12 @@ function Workspace(){
  return <Layout page={page} onChange={setPage} onLogout={()=>{void logout()}} refreshing={loading} onRefresh={refresh}>
   <StatusBar style="dark"/>
   {error?<View style={{marginBottom:13,gap:7}}><ErrorText message={error}/><Button title="إعادة المحاولة" onPress={()=>{void refresh()}} variant="outline"/></View>:null}
-  {page==='dashboard'?<DashboardScreen data={dashboard} onAdd={()=>setPage('newPurchase')} onCustomer={openCustomer}/>:null}
-  {page==='customers'?<CustomersScreen customers={customers} onAdd={addCustomer} onOpen={openCustomer}/>:null}
+  {page==='dashboard'?<DashboardScreen data={dashboard} customers={customers} purchases={purchases} onAdd={()=>setPage('newPurchase')} onCustomer={openCustomer} onPurchases={()=>setPage('purchases')} onInsights={openInsights}/>:null}
+  {page==='customers'?<CustomersScreen customers={customers} purchases={purchases} onAdd={addCustomer} onOpen={openCustomer}/>:null}
   {page==='purchases'?<PurchasesScreen purchases={purchases} onAdd={()=>setPage('newPurchase')} onCustomer={openCustomer}/>:null}
   {page==='newPurchase'?<NewPurchaseScreen customers={customers} onCreateCustomer={()=>setPage('customers')} onSave={savePurchase} onSaveAndShare={savePurchaseAndShare}/>:null}
   {page==='profile'&&currentId?<ProfileScreen token={token} id={currentId} onBack={()=>setPage('customers')} onNewPurchase={()=>setPage('newPurchase')} onInsights={()=>openInsights(currentId)} onShare={()=>openWhatsApp(currentId)}/>:null}
-  {page==='insights'?<InsightsScreen token={token} customers={customers} initialCustomerId={currentId} onSelectCustomer={setCurrentId}/>:null}
+  {page==='insights'?<InsightsScreen token={token} customers={customers} initialCustomerId={currentId} onSelectCustomer={setCurrentId} onShare={openWhatsApp}/>:null}
  </Layout>;
 }
 
