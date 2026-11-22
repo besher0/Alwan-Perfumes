@@ -25,7 +25,7 @@ export function Button({title,onPress,variant='gold',disabled=false,loading=fals
 export function Field({label,value,onChangeText,placeholder,keyboardType='default',secure=false,editable=true,style}: {
   label:string;value:string;onChangeText?:(v:string)=>void;placeholder?:string;keyboardType?:'default'|'phone-pad'|'number-pad'|'email-address';secure?:boolean;editable?:boolean;style?:StyleProp<ViewStyle>;
 }) {
- return <View style={[{minWidth:0,flex:1,gap:6},style]}>
+ return <View style={[{minWidth:0,flexGrow:1,flexShrink:1,gap:6},style]}>
     <AText size={11} weight="bold" color={C.ink}>{label}</AText>
     <TextInput value={value} onChangeText={onChangeText} placeholder={placeholder} placeholderTextColor="#B1A198" keyboardType={keyboardType} secureTextEntry={secure} editable={editable}
       autoCapitalize="none" style={{height:46,borderWidth:1,borderColor:C.line,backgroundColor:C.white,borderRadius:12,paddingHorizontal:13,fontSize:12,fontFamily:FONT.regular,color:C.ink,textAlign:'right',writingDirection:'rtl',opacity:editable?1:.65}}/>
