@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Image, KeyboardAvoidingView, Platform, ScrollView, StyleSheet, View, useWindowDimensions } from 'react-native';
+import { ImageBackground, KeyboardAvoidingView, Platform, ScrollView, StyleSheet, View, useWindowDimensions } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
 import { useAuth } from '../contexts/AuthContext';
@@ -29,22 +29,20 @@ export function LoginScreen() {
   };
 
   return (
-    <SafeAreaView style={styles.safe} edges={['top', 'bottom', 'left', 'right']}>
-      <StatusBar style="dark" />
+    <ImageBackground
+      source={isLandscape
+        ? require('../assets/floral/login-landscape.jpg')
+        : require('../assets/floral/login-portrait.jpg')}
+      resizeMode="cover"
+      style={styles.fullScreenBackground}
+      imageStyle={styles.backgroundImage}
+      accessible={false}
+    >
+      {/* SafeAreaView only insets the form; the wallpaper extends behind system insets. */}
+      <SafeAreaView style={styles.safe} edges={['top', 'bottom', 'left', 'right']}>
+        <StatusBar style="dark" translucent backgroundColor="transparent" />
 
-      {/* Unlike the old header crop, these wallpapers have no baked-in card,
-          edges, or opaque rectangular patch. They fill the viewport independently. */}
-      <Image
-        pointerEvents="none"
-        source={isLandscape
-          ? require('../assets/floral/login-landscape.jpg')
-          : require('../assets/floral/login-portrait.jpg')}
-        resizeMode="stretch"
-        style={StyleSheet.absoluteFillObject}
-        accessible={false}
-      />
-
-      <KeyboardAvoidingView
+        <KeyboardAvoidingView
         style={styles.flex}
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
       >
@@ -108,13 +106,16 @@ export function LoginScreen() {
             </AText>
           </Card>
         </ScrollView>
-      </KeyboardAvoidingView>
-    </SafeAreaView>
+        </KeyboardAvoidingView>
+      </SafeAreaView>
+    </ImageBackground>
   );
 }
 
 const styles = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: C.background },
+  fullScreenBackground: { flex: 1, width: '100%', height: '100%', backgroundColor: C.background },
+  backgroundImage: { width: '100%', height: '100%' },
+  safe: { flex: 1, backgroundColor: 'transparent' },
   flex: { flex: 1 },
   content: { flexGrow: 1, justifyContent: 'center', alignItems: 'center' },
   card: {
