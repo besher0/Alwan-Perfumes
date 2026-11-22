@@ -1,6 +1,6 @@
 import React,{useState} from 'react';
 import { Pressable,TextInput,View,useWindowDimensions } from 'react-native';
-import { AText,Button,Card,Empty,ErrorText,Field,NoteTag,NoteTile,ScreenHeading,SectionHeading } from '../components/UI';
+import { AText,Button,Card,Empty,ErrorText,Field,NoteTag,NoteGrid,ScreenHeading,SectionHeading } from '../components/UI';
 import { C,FONT } from '../theme/colors';
 import { FALLBACK_NOTES,noteLabel } from '../lib/notes';
 import { Customer,Purchase } from '../lib/types';
@@ -12,7 +12,7 @@ export function CustomersScreen({customers,purchases,onAdd,onOpen}:{
   const [name,setName]=useState('');const [phone,setPhone]=useState('');const [favorites,setFavorites]=useState<string[]>([]);
   const [error,setError]=useState('');const [saving,setSaving]=useState(false);const {width}=useWindowDimensions();
   const available=width-(width>=820?282:38);const columns=available>=1050?3:available>=650?2:1;
-  const gap=13;const tileWidth=Math.max(105,Math.floor((available-36-gap*4)/Math.min(available>=770?5:available>=520?4:available>=380?3:2,5)));
+  const gap=13;
   const filtered=customers.filter(c=>c.name.toLowerCase().includes(search.toLowerCase())||c.phone.includes(search.replace(/\D/g,'')));
   const submit=async()=>{setError('');if(name.trim().length<2){setError('اسم العميل مطلوب');return}if(phone.replace(/\D/g,'').length<8){setError('رقم الهاتف غير صالح');return}
     setSaving(true);try{await onAdd(name,phone,favorites);setName('');setPhone('');setFavorites([]);setAdding(false)}catch(e){setError(e instanceof Error?e.message:'تعذر الحفظ')}finally{setSaving(false)};
@@ -29,9 +29,7 @@ export function CustomersScreen({customers,purchases,onAdd,onOpen}:{
         <Field label="رقم الهاتف مع مفتاح الدولة *" value={phone} onChangeText={setPhone} keyboardType="phone-pad" placeholder="+963 9xx xxx xxx" style={{flexGrow:1,flexShrink:1}}/>
       </View>
       <SectionHeading title="النوتات المفضلة لدى الزبون" description="اختياري، ويمكن تعديله لاحقًا" icon="♡"/>
-      <View style={{flexDirection:'row-reverse',flexWrap:'wrap',gap:9}}>
-        {FALLBACK_NOTES.map(n=><NoteTile key={n.id} id={n.id} width={tileWidth} compact selected={favorites.includes(n.id)} onPress={()=>setFavorites(prev=>prev.includes(n.id)?prev.filter(id=>id!==n.id):[...prev,n.id])}/>)}
-      </View>
+      <NoteGrid notes={FALLBACK_NOTES} selectedIds={favorites} compact onToggle={id=>setFavorites(prev=>prev.includes(id)?prev.filter(v=>v!==id):[...prev,id])}/>
       <ErrorText message={error}/>
       <Button title="حفظ العميل" loading={saving} onPress={submit} style={{alignSelf:'flex-start'}}/>
     </Card>:null}
