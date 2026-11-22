@@ -1,6 +1,6 @@
 import React,{useEffect,useState} from 'react';
 import {Image,Pressable,ScrollView,View,useWindowDimensions} from 'react-native';
-import { AText,Button,Card,ErrorText,Field,NoteTag,NoteTile,ScreenHeading,SectionHeading,Stars } from '../components/UI';
+import { AText,Button,Card,ErrorText,Field,NoteTag,NoteGrid,ScreenHeading,SectionHeading,Stars } from '../components/UI';
 import { FALLBACK_NOTES,noteLabel,today } from '../lib/notes';
 import { C } from '../theme/colors';
 import {Customer,NewPurchaseDto} from '../lib/types';
@@ -10,10 +10,6 @@ export function NewPurchaseScreen({customers,onCreateCustomer,onSave,onSaveAndSh
   const {width}=useWindowDimensions();
   const tablet=width>=820;const available=width-(tablet?282:40);const roomy=available>=860;
   const formWidth=roomy?available-322:available;
-  const cols=formWidth>=750?5:formWidth>=570?4:formWidth>=410?3:2;
-  const tileWidth=Math.max(92,Math.floor((formWidth-46-10*(cols-1))/cols));
-  const favoriteCols=formWidth>=750?6:cols;
-  const favoriteWidth=Math.max(82,Math.floor((formWidth-46-9*(favoriteCols-1))/favoriteCols));
   const [customerId,setCustomerId]=useState(customers[0]?.id||'');const [perfumeName,setPerfumeName]=useState('');
   const [date,setDate]=useState(today());const [rating,setRating]=useState(5);const [noteIds,setNoteIds]=useState<string[]>([]);
   const [primary,setPrimary]=useState('');const [favoriteIds,setFavoriteIds]=useState<string[]>([]);
@@ -74,11 +70,11 @@ export function NewPurchaseScreen({customers,onCreateCustomer,onSave,onSaveAndSh
         </Card>
         <Card>
           <SectionHeading title="نوتات العطر" description="اختر النوتات العطرية الموجودة في هذا العطر. يمكنك اختيار أكثر من نوتة." icon="✿"/>
-          <View style={{flexDirection:'row-reverse',flexWrap:'wrap',gap:10}}>{FALLBACK_NOTES.map(n=><NoteTile key={n.id} id={n.id} selected={noteIds.includes(n.id)} onPress={()=>toggleNote(n.id)} width={tileWidth}/>)}</View>
+          <NoteGrid notes={FALLBACK_NOTES} selectedIds={noteIds} onToggle={toggleNote}/>
         </Card>
         <Card>
           <SectionHeading title="النوتات المفضلة للعميل" description="النوتات التي يحبها الزبون عادةً، مستقلة عن تركيب العطر الحالي." icon="♡"/>
-          <View style={{flexDirection:'row-reverse',flexWrap:'wrap',gap:9}}>{FALLBACK_NOTES.map(n=><NoteTile key={n.id} id={n.id} selected={favoriteIds.includes(n.id)} width={favoriteWidth} compact onPress={()=>setFavoriteIds(prev=>prev.includes(n.id)?prev.filter(x=>x!==n.id):[...prev,n.id])}/>)}</View>
+          <NoteGrid notes={FALLBACK_NOTES} selectedIds={favoriteIds} compact onToggle={id=>setFavoriteIds(prev=>prev.includes(id)?prev.filter(x=>x!==id):[...prev,id])}/>
         </Card>
         <ErrorText message={error}/>
         <View style={{flexDirection:'row-reverse',gap:10,flexWrap:'wrap'}}>
